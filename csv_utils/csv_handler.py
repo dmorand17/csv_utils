@@ -49,6 +49,11 @@ class CSVHandler:
         else:
             print("One of the following columns does NOT exist: ", ", ".join(cols.keys()))
 
+    def _filter_csv(self,filters):
+        for fltr in filters:
+            self.csv = list(filter(fltr,self.csv))
+        return self.csv
+
     # Allows for passing of a callable function to update rows
     def update_rows(self,**cols):
         for i,row in enumerate(self._rows):

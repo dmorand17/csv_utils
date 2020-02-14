@@ -1,2 +1,2 @@
 from .csv_handler import CSVHandler
-from .csv_jinja_view import CSVJinja
+from .csv_jinja import CSVJinja

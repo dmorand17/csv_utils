@@ -7,11 +7,11 @@ with open('LICENSE') as f:
     license = f.read()
 
 with open('requirements.txt') as f:
-    requirements = f.read().splitlines()
+    requirements = [req for req in f.read().splitlines() if not req.startswith('#')]
 
 setup(
     name='csv_utils',
-    version='0.0.1',
+    version='0.1.0-rc1',
     description='CSV Utility scripts',
     long_description=readme,
     author='Douglas Morand',
