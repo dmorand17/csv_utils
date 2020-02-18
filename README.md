@@ -24,6 +24,7 @@ With git:
 ```bash
 git clone https://github.com/dmorand17/csv_utils
 cd csv_utils
+pip install -r requirements.txt
 ```
 
 With pip (_not yet implemented_):
