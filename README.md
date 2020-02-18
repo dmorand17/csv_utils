@@ -24,6 +24,8 @@ With git:
 ```bash
 git clone https://github.com/dmorand17/csv_utils
 cd csv_utils
+virtualenv venv
+source venv/bin/activate
 pip install -r requirements.txt
 ```
 
