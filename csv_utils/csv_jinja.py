@@ -41,16 +41,16 @@ class CSVJinja:
             return dt.strftime(fmt or self.default_datetime_fmt)
 
     def render_template(self, template_name, csv, **kwargs):
-        print("csv type {}".format(type(csv)))
+        # print("csv type {}".format(type(csv)))
         return self.env.get_template(template_name,globals=kwargs.get('template_globals')).render(rows=csv, **kwargs)
 
-    def render_template_to_dict(self, template_name, csv, fieldnames, rowkey, **kwargs):
-        print("csv type {}".format(type(csv)))
+    def render_template_to_list(self, template_name, csv, fieldnames, rowkey, **kwargs):
+        # print("csv type {}".format(type(csv)))
         # print(csv)
         template = self.env.get_template(template_name,globals=kwargs.get('template_globals'))
         # [print(row) for row in csv]
 
-        return [dict(key=row[rowkey], template=template.render(rows=[row], fieldnames=fieldnames, **kwargs)) for row in csv]
+        return [dict(key=rowkey(row), template=template.render(rows=[row], fieldnames=fieldnames, **kwargs)) for row in csv]
 
 # For testing
 if __name__ == '__main__':
@@ -60,5 +60,6 @@ if __name__ == '__main__':
     rendered = csv_jinja.render_template("samples/sample-csvrows.j2",csvhandler.rows())
     print(rendered)
 
-    rendered = csv_jinja.render_template_to_dict("samples/sample.j2",csvhandler.rows(),csvhandler.headers(),rowkey="name")
+    key = lambda r: '-'.join([r[key] for key in ["name","gender"]])
+    rendered = csv_jinja.render_template_to_list("samples/sample.j2",csvhandler.rows(),csvhandler.headers(),rowkey=key)
     print(rendered)
