@@ -1,5 +1,7 @@
 import jinja2
 import os
+import sys
+import argparse
 from datetime import datetime
 from csv_utils.csv_handler import CSVHandler
 
@@ -40,20 +42,27 @@ class CSVJinja:
         if type(dt) == datetime:
             return dt.strftime(fmt or self.default_datetime_fmt)
 
-    def render_template(self, template_name, csv, **kwargs):
+    def render_template(self, template, csv, **kwargs):
         # print("csv type {}".format(type(csv)))
-        return self.env.get_template(template_name,globals=kwargs.get('template_globals')).render(rows=csv, **kwargs)
+        return self.env.get_template(template,globals=kwargs.get('template_globals')).render(rows=csv, **kwargs)
 
-    def render_template_to_list(self, template_name, csv, fieldnames, rowkey, **kwargs):
+    def render_template_to_list(self, template, csv, fieldnames, rowkey, **kwargs):
         # print("csv type {}".format(type(csv)))
         # print(csv)
-        template = self.env.get_template(template_name,globals=kwargs.get('template_globals'))
+        template = self.env.get_template(template,globals=kwargs.get('template_globals'))
         # [print(row) for row in csv]
 
         return [dict(key=rowkey(row), template=template.render(rows=[row], fieldnames=fieldnames, **kwargs)) for row in csv]
 
-# For testing
-if __name__ == '__main__':
+def parse_args():
+    parser = argparse.ArgumentParser(description='This script will render a file based on a jinja template (j2)')
+    parser.add_argument('-v','--verbose', help='Enable verbose logging', action='store_true')
+    parser.add_argument('-c', '--csv', help='csv input mapping file', required=True, action='store')
+    parser.add_argument('--template-dir', help='template directory to find templates', default='templates', action='store')
+    parser.add_argument('-t', '--templates', help='template filename', required=True, action='store', nargs='+')
+    return parser.parse_args()
+
+def test():
     csvhandler = CSVHandler('samples/sample-input.csv')
 
     csv_jinja = CSVJinja()
@@ -63,3 +72,19 @@ if __name__ == '__main__':
     key = lambda r: '-'.join([r[key] for key in ["name","gender"]])
     rendered = csv_jinja.render_template_to_list("samples/sample.j2",csvhandler.rows(),csvhandler.headers(),rowkey=key)
     print(rendered)
+
+def main():
+    args = parse_args()
+    csvhandler = CSVHandler(args.csv)
+    csv_jinja = CSVJinja()
+
+    for template in args.templates:
+        rendered = csv_jinja.render_template(template,csvhandler.rows())
+        print(rendered)
+
+# For testing
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        main()
+    else:
+        test()

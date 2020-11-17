@@ -1,0 +1,18 @@
+{
+    "resourceType": "Bundle",
+    "type": "transaction",
+    "entry": [
+      {% for row in rows -%}
+      {%- if loop.index > 1 %}
+      ,{
+      {%- else %}
+      {
+      {%- endif %} 
+        "request": {
+          "method": "DELETE",
+          "url": "Patient/{{row.id}}"
+        }
+      }      
+      {% endfor %}
+    ]
+  }

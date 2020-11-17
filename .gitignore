@@ -1,5 +1,8 @@
+.DS_Store
+
 # VSCode
 __pycache__/
+.vscode/
 
 # virtualenv
 env/
