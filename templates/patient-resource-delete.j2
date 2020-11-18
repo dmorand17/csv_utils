@@ -2,10 +2,10 @@
     "resourceType": "Bundle",
     "type": "transaction",
     "entry": [
-      {% for row in rows -%}
-      {%- if loop.index > 1 %}
+      {% for row in rows %}
+      {% if loop.index > 1 %}
       ,{
-      {%- else %}
+      {% else %}
       {
       {%- endif %} 
         "request": {

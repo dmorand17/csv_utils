@@ -77,6 +77,8 @@ def main():
     args = parse_args()
     csvhandler = CSVHandler(args.csv)
     csv_jinja = CSVJinja()
+    # print (f"CSVJinja options: {csv_jinja.env.trim_blocks}")
+    # print (f"CSVJinja options: {csv_jinja.env.lstrip_blocks}")
 
     for template in args.templates:
         rendered = csv_jinja.render_template(template,csvhandler.rows())
